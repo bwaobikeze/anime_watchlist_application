@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369409894769",
+    "project_id": "anime-watchlist-app-dd654",
+    "storage_bucket": "anime-watchlist-app-dd654.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369409894769:android:7c7c6409507e6b8002eed0",
+        "android_client_info": {
+          "package_name": "com.example.anime_watchlist_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhYcdhlWprtan-v0WGeBAd8-v3CkRDMqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
