@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -59,6 +60,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final db = FirebaseFirestore.instance;
   User? user;
   FieAuth fieAuth = FieAuth();
   var username = '';
@@ -75,6 +77,13 @@ class _LoginFormState extends State<LoginForm> {
             print('First text field: $text');
             username = text;
           },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          
+          },
         ),
         TextFormField(
           decoration: const InputDecoration(
@@ -83,6 +92,16 @@ class _LoginFormState extends State<LoginForm> {
           onChanged: (text) {
             print('Second text field: $text');
             password = text;
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            if (value.length < 6) {
+              return 'Password must be at least 6 characters long';
+            }
+            return null;
+          
           },
         ),
         ElevatedButton(
@@ -135,10 +154,13 @@ class createAccountForm extends StatefulWidget {
 }
 
 class _createAccountFormState extends State<createAccountForm> {
+  final db = FirebaseFirestore.instance;
   User? user;
   FieAuth fieAuth = FieAuth();
+  var name = '';
+  var lastName = '';
   var username = '';
-
+  var email = '';
   var password = '';
 
   @override
@@ -147,11 +169,38 @@ class _createAccountFormState extends State<createAccountForm> {
       children: <Widget>[
         TextFormField(
           decoration: const InputDecoration(
+            labelText: 'First Name',
+          ),
+          onChanged: (text) {
+            // print('First Name : $text');
+            name = text;
+          },
+        ),
+        TextFormField(
+          decoration: const InputDecoration(
+            labelText: 'Last Name',
+          ),
+          onChanged: (text) {
+            // print('Last Name : $text');
+            lastName = text;
+          },
+        ),
+        TextFormField(
+          decoration: const InputDecoration(
             labelText: 'Username',
           ),
           onChanged: (text) {
-            print('First text field: $text');
+            // print('Username: $text');
             username = text;
+          },
+        ),
+        TextFormField(
+          decoration: const InputDecoration(
+            labelText: 'Email Address',
+          ),
+          onChanged: (text) {
+            // print('Email: $text');
+            email = text;
           },
         ),
         TextFormField(
@@ -159,29 +208,42 @@ class _createAccountFormState extends State<createAccountForm> {
             labelText: 'Password',
           ),
           onChanged: (text) {
-            print('Second text field: $text');
+            // print('Password: $text');
             password = text;
           },
         ),
         ElevatedButton(
           onPressed: () async {
             print('Create Account button pressed');
-            user = await fieAuth.signUp(username, password);
+            user = await fieAuth.signUp(email, password);
             if (user != null) {
+              final _userProfile = {
+                'Name': name,
+                'LastName': lastName,
+                'username': username,
+                'Email': email,
+                'Password': password,
+                'userID': user!.uid
+              };
+              db.collection('users').add(_userProfile);
+              
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => homeScreen()));
             }
           },
           child: const Text('Create Account'),
         ),
-        ElevatedButton(onPressed: () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => LoginScreen()));
-        }, child: const Text('Back to Login')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()));
+            },
+            child: const Text('Back to Login')),
       ],
     );
   }
 }
+
 //Home screen
 class homeScreen extends StatelessWidget {
   @override
