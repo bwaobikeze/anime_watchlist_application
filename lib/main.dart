@@ -1,3 +1,4 @@
+import 'package:anime_watchlist_app/validation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class LoginScreen extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(30.0),
           child: LoginForm(),
         ),
       ),
@@ -60,10 +61,12 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
   final db = FirebaseFirestore.instance;
   User? user;
   FieAuth fieAuth = FieAuth();
-  var username = '';
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
   var password = '';
   @override
   Widget build(BuildContext context) {
@@ -71,46 +74,38 @@ class _LoginFormState extends State<LoginForm> {
       children: <Widget>[
         TextFormField(
           decoration: const InputDecoration(
-            labelText: 'Username',
+            labelText: 'Email Address',
           ),
-          onChanged: (text) {
-            print('First text field: $text');
-            username = text;
-          },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter some text';
-            }
-            return null;
-          
-          },
+          // onChanged: (text) {
+          //   print('First text field: $text');
+          //   username = text;
+
+          // },
+          controller: _emailTextController,
+          validator: (value) => validation.validateEmail(email: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Password',
           ),
-          onChanged: (text) {
-            print('Second text field: $text');
-            password = text;
-          },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter some text';
-            }
-            if (value.length < 6) {
-              return 'Password must be at least 6 characters long';
-            }
-            return null;
-          
-          },
+          obscureText: true,
+          controller: _passwordTextController,
+          validator: (value) => validation.validatePassword(value: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
         ElevatedButton(
           onPressed: () async {
-            print('Login button pressed');
-            user = await fieAuth.signIn(username, password);
+            // if (_formKey.currentState!.validate()) {
+
+            // }
+            user = await fieAuth.signIn(
+                _emailTextController.text, _passwordTextController.text);
             if (user != null) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => homeScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(user: user)));
             }
           },
           child: const Text('Login'),
@@ -155,14 +150,13 @@ class createAccountForm extends StatefulWidget {
 
 class _createAccountFormState extends State<createAccountForm> {
   final db = FirebaseFirestore.instance;
+  final _nameTextController = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _usernameTextController = TextEditingController();
+  final _lastNameTextController = TextEditingController();
   User? user;
   FieAuth fieAuth = FieAuth();
-  var name = '';
-  var lastName = '';
-  var username = '';
-  var email = '';
-  var password = '';
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -171,64 +165,64 @@ class _createAccountFormState extends State<createAccountForm> {
           decoration: const InputDecoration(
             labelText: 'First Name',
           ),
-          onChanged: (text) {
-            // print('First Name : $text');
-            name = text;
-          },
+          controller: _nameTextController,
+          validator: (value) => validation.nameValidator(name: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Last Name',
           ),
-          onChanged: (text) {
-            // print('Last Name : $text');
-            lastName = text;
-          },
+          controller: _lastNameTextController,
+          validator: (value) => validation.lastNameValidator(lastName: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Username',
           ),
-          onChanged: (text) {
-            // print('Username: $text');
-            username = text;
-          },
+          controller: _usernameTextController,
+          validator: (value) => validation.usernameValidator(username: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Email Address',
           ),
-          onChanged: (text) {
-            // print('Email: $text');
-            email = text;
-          },
+          controller: _emailTextController,
+          validator: (value) => validation.validateEmail(email: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction
         ),
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Password',
           ),
-          onChanged: (text) {
-            // print('Password: $text');
-            password = text;
-          },
+          controller: _passwordTextController,
+          validator: (value) => validation.validatePassword(value: value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
         ElevatedButton(
           onPressed: () async {
             print('Create Account button pressed');
-            user = await fieAuth.signUp(email, password);
+            user = await fieAuth.signUp(
+                _emailTextController.text, _passwordTextController.text);
             if (user != null) {
               final _userProfile = {
-                'Name': name,
-                'LastName': lastName,
-                'username': username,
-                'Email': email,
-                'Password': password,
+                'Name': _nameTextController.text,
+                'LastName': _lastNameTextController.text,
+                'username': _usernameTextController.text,
+                'Email': _emailTextController.text,
+                'Password': _passwordTextController.text,
                 'userID': user!.uid
               };
-              db.collection('users').add(_userProfile);
-              
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => homeScreen()));
+              try {
+                db.collection('users').add(_userProfile);
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              } catch (e) {
+                print(e);
+              }
             }
           },
           child: const Text('Create Account'),
@@ -245,7 +239,9 @@ class _createAccountFormState extends State<createAccountForm> {
 }
 
 //Home screen
-class homeScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
+  String _user = FirebaseAuth.instance.currentUser!.uid;
+  HomeScreen({Key? key, User? user}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,7 +258,10 @@ class homeScreen extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: const Text('Welcome to the Anime Watchlist App'),
+        child: Column(children: <Widget>[
+          const Text('Welcome to the Anime Watchlist App'),
+          Text(_user)
+        ]),
       ),
     );
   }
