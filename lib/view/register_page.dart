@@ -47,7 +47,7 @@ class _createAccountFormState extends State<createAccountForm> {
         if (state is Authenticated) {
           // Navigate to the authenticated screen
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+              context, MaterialPageRoute(builder: (context) => AppNavigationBar()));
         } else if (state is Unauthenticated) {
           // Show an error message
           ScaffoldMessenger.of(context)
