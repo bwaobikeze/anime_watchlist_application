@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../firebase_auth.dart';
 import '../validation.dart';
 import 'home_page.dart';
 import 'register_page.dart';
@@ -18,11 +15,14 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Center(
+      body: BlocProvider(
+        create: (context) => AuthBloc( ),
+        child:  Center(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: LoginForm(),
         ),
+      ),
       ),
     );
   }
@@ -32,12 +32,6 @@ class LoginForm extends StatelessWidget {
   LoginForm({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-
-  final db = FirebaseFirestore.instance;
-
-  User? user;
-
-  FieAuth fieAuth = FieAuth();
 
   final _emailTextController = TextEditingController();
 
@@ -53,7 +47,7 @@ class LoginForm extends StatelessWidget {
         if (state is Authenticated) {
           // Navigate to the authenticated screen
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+              context, MaterialPageRoute(builder: (context) => AppNavigationBar()));
         } else if (state is Unauthenticated) {
           // Show an error message
           ScaffoldMessenger.of(context)
@@ -61,7 +55,8 @@ class LoginForm extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return Column(
+        return Form(key:_formKey ,
+        child:Column(
           children: <Widget>[
             TextFormField(
               decoration: const InputDecoration(
@@ -82,9 +77,9 @@ class LoginForm extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Text("out of the if statement");
+                print("out of the if statement");
                 if (_formKey.currentState!.validate()) {
-                  Text("inside the if statement");
+                  print("inside the if statement");
                   context.read<AuthBloc>().add(LoginEvent(
                       email: _emailTextController.text,
                       password: _passwordTextController.text));
@@ -100,6 +95,7 @@ class LoginForm extends StatelessWidget {
               child: const Text('Create Account'),
             ),
           ],
+        )
         );
       },
     );
