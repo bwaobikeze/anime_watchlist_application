@@ -10,9 +10,10 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
-    on<AuthEvent>((event, emit) async*{
+    on<AuthEvent>((event, emit) async{
       // TODO: implement event handler
       if (event is LoginEvent) {
+        print(' it is a login LoginEvent');
         FieAuth fieAuth = FieAuth();
         User? user = await fieAuth.signIn(event.email, event.password);
         if (user != null) {
@@ -22,7 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       } else if (event is RegisterEvent) {
         FieAuth fieAuth = FieAuth();
-        User? user = await fieAuth.signUp(event.email, event.password);
+        User? user = await fieAuth.createAccount(event.email, event.password, event.username, event.Name, event.LastName);
         if (user != null) {
           emit(Authenticated());
         } else {
@@ -32,7 +33,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         FieAuth fieAuth = FieAuth();
         fieAuth.signout();
         emit(Unauthenticated());
-        
       }
     });
   }

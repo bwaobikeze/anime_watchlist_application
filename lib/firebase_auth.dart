@@ -1,4 +1,6 @@
+import 'package:anime_watchlist_app/view/register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FieAuth {
   Future<User?> signIn(String email, String password) async {
@@ -18,13 +20,19 @@ class FieAuth {
     }
   }
 
-  Future<User?> signUp(String email, String password) async {
+  Future<User?> createAccount(String email, String password, String username, String name, String lastName) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'username': username,
+        'name': name,
+        'lastName': lastName,
+        'email': email,
+        'userID': userCredential.user!.uid
+      });
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -35,6 +43,7 @@ class FieAuth {
     } catch (e) {
       print(e);
     }
+    return null;
   }
   signout () async {
     await FirebaseAuth.instance.signOut();
