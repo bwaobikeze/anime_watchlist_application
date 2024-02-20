@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'view/login_page.dart';
+import 'bloc/auth_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 //Main function to run the app
 Future<void> main() async {
@@ -24,9 +27,10 @@ class AnimeWatchlistApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: BlocProvider(
+        create: (context) => AuthBloc( ),
+        child:  LoginScreen(),
+      ),
     );
   }
 }
-
-
