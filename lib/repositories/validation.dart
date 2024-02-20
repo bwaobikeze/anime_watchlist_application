@@ -9,7 +9,7 @@ class validation {
     if (lastName!.isEmpty) {
       return 'Last Name is required';
     }
-    if (lastName.length < 12) {
+    if (lastName.length > 12) {
       return 'Last Name must be at least 12 characters long';
     }
     return null;
