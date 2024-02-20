@@ -1,7 +1,7 @@
 import 'package:anime_watchlist_app/view/browse_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../firebase_auth.dart';
+import '../repositories/firebase_auth.dart';
 import 'login_page.dart';
 import 'calender_page.dart';
 import 'anime_library_page.dart';
@@ -46,8 +46,8 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    calenderPage(),
     animeLibraryPage(),
+    calenderPage(),
     BrowsePage(),
   ];
 

@@ -1,4 +1,4 @@
-import 'package:anime_watchlist_app/validation.dart';
+import 'package:anime_watchlist_app/repositories/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
