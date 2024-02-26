@@ -1,13 +1,21 @@
 class AnimeCoverTile {
   String title;
-  String imageUrl;
-  String id;
-  String type;
+  String cover;
+  int id;
   String rating;
-  String year;
-  String genre;
-  String status;
-  String episode;
-  String duration;
-  AnimeCoverTile(this.title, this.imageUrl, this.id, this.type, this.rating, this.year, this.genre, this.status, this.episode, this.duration);
+  String description;
+  AnimeCoverTile(
+      {required this.title,
+      required this.cover,
+      required this.id,
+      required this.rating,
+      required this.description});
+  factory AnimeCoverTile.fromJson(Map<String, dynamic> json) {
+    return AnimeCoverTile(
+        title: json['title']['english'],
+        cover: json['coverImage']['large'],
+        id: json['id'],
+        rating: json['averageScore'].toString(),
+        description: json['description']);
+  }
 }
