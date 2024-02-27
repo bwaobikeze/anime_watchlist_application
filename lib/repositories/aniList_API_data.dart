@@ -23,6 +23,7 @@ class AniListAPI {
             media(type: ANIME) {
               id
               title {
+                romaji
                 english
               }
               coverImage {
