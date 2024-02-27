@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         leading: Image.asset('assets/goku-icon-head.png'),
         backgroundColor: Colors.transparent,
-        title: Center( child: Text('Home') ),
+        title: Center(child: Text('Home')),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
@@ -30,77 +30,120 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
+      body: RecievingAnimeCover(),
+      // body: Stack(
+      //   children: <Widget>[
+      //     Container(
+      //       decoration: BoxDecoration(
+      //         image: DecorationImage(
+      //           image: AssetImage('assets/background.jpg'),
+      //           fit: BoxFit.cover,
+      //         ),
+      //       ),
+      //     ),
+      //     Padding(
+      //       padding: EdgeInsets.all(15.0),
+      //       child: Column(
+      //         children: [
+      //           Spacer(),
+      //           Row(
+      //             children: [
+      //               Text(
+      //                 'Top Anime',
+      //                 style: TextStyle(fontWeight: FontWeight.bold),
+      //               ),
+      //               Spacer(),
+      //               GestureDetector(
+      //                 onTap: () {
+      //                   Navigator.pushReplacement(
+      //                       context,
+      //                       MaterialPageRoute(
+      //                           builder: (context) => animeLibraryPage()));
+      //                 },
+      //                 child: Text('MORE'),
+      //               )
+      //             ],
+      //           ),
+      //           Spacer(),
+      //           Row(
+      //             children: [
+      //               Text(
+      //                 'Most Wacthed',
+      //                 style: TextStyle(fontWeight: FontWeight.bold),
+      //               ),
+      //               RecievingAnimeCover(),
+      //               Spacer(),
+      //               GestureDetector(
+      //                 onTap: () {
+      //                   Navigator.pushReplacement(
+      //                       context,
+      //                       MaterialPageRoute(
+      //                           builder: (context) => animeLibraryPage()));
+      //                 },
+      //                 child: Text('MORE'),
+      //               )
+      //             ],
+      //           ),
+      //           Spacer(),
+      //           Row(
+      //             children: [
+      //               Text(
+      //                 'Continue Adding',
+      //                 style: TextStyle(fontWeight: FontWeight.bold),
+      //               ),
+      //               Spacer(),
+      //               GestureDetector(
+      //                 onTap: () {
+      //                   Navigator.pushReplacement(
+      //                       context,
+      //                       MaterialPageRoute(
+      //                           builder: (context) => animeLibraryPage()));
+      //                 },
+      //                 child: Text('MORE'),
+      //               )
+      //             ],
+      //           ),
+      //           Spacer(),
+      //         ],
+      //       ),
+      //     )
+      //   ],
+      // ),
+    );
+  }
+}
+
+class animeCards extends StatelessWidget {
+  AnimeCoverTile animeCoverinfo;
+  animeCards({super.key, required this.animeCoverinfo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Image.network(
+          animeCoverinfo!.cover,
+          fit: BoxFit.cover,
+          height: 150.0,
+        ),
+        Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                animeCoverinfo!.title,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
+              )
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                Spacer(),
-                Row(
-                  children: [
-                    Text('Top Anime',
-                    style:TextStyle(fontWeight: FontWeight.bold),),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => animeLibraryPage()));
-                      },
-                      child: Text('MORE'),
-                    )
-                  ],
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    Text('Most Wacthed',
-                    style:TextStyle(fontWeight: FontWeight.bold),),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => animeLibraryPage()));
-                      },
-                      child: Text('MORE'),
-                    )
-                  ],
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    Text('Continue Adding',
-                    style:TextStyle(fontWeight: FontWeight.bold),),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => animeLibraryPage()));
-                      },
-                      child: Text('MORE'),
-                    )
-                  ],
-                ),
-                Spacer(),
-              ],
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }
@@ -110,16 +153,23 @@ class RecievingAnimeCover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<AnimeCoverTile>(
+    return FutureBuilder<List<AnimeCoverTile>>(
       future: AniListAPI().getAnimeList(),
-      builder: (BuildContext context, AsyncSnapshot<AnimeCoverTile> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<List<AnimeCoverTile>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
           print(snapshot.error);
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          return ListView();
+          List<AnimeCoverTile> animeList = snapshot.data!;
+          List<Widget> AnimeCards =
+              animeList.map((e) => animeCards(animeCoverinfo: e)).toList();
+          return ListView(
+            scrollDirection: Axis.horizontal,
+            children: AnimeCards,
+          );
         } else {
           return Text('No data');
         }

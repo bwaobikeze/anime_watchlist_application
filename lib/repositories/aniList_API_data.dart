@@ -14,12 +14,12 @@ class AniListAPI {
     cache: GraphQLCache(),
   ));
 
-  Future<AnimeCoverTile> getAnimeList() async {
+  Future<List<AnimeCoverTile>> getAnimeList() async {
     final QueryOptions options = QueryOptions(
       document: gql(
         r'''
         query {
-          Page(page: 1, perPage: 1) {
+          Page(page: 1, perPage: 5) {
             media(type: ANIME) {
               id
               title {
@@ -44,7 +44,7 @@ class AniListAPI {
     print(result.data);
     final List<dynamic> media = result.data!['Page']['media'];
     if (media.isNotEmpty) {
-      return AnimeCoverTile.fromJson(media[0]);
+      return media.map((e) => AnimeCoverTile.fromJson(e)).toList();
     } else {
       throw Exception('No anime data found');
     }
