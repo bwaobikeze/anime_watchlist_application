@@ -30,85 +30,83 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: RecievingAnimeCover(),
-      // body: Stack(
-      //   children: <Widget>[
-      //     Container(
-      //       decoration: BoxDecoration(
-      //         image: DecorationImage(
-      //           image: AssetImage('assets/background.jpg'),
-      //           fit: BoxFit.cover,
-      //         ),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: EdgeInsets.all(15.0),
-      //       child: Column(
-      //         children: [
-      //           Spacer(),
-      //           Row(
-      //             children: [
-      //               Text(
-      //                 'Top Anime',
-      //                 style: TextStyle(fontWeight: FontWeight.bold),
-      //               ),
-      //               Spacer(),
-      //               GestureDetector(
-      //                 onTap: () {
-      //                   Navigator.pushReplacement(
-      //                       context,
-      //                       MaterialPageRoute(
-      //                           builder: (context) => animeLibraryPage()));
-      //                 },
-      //                 child: Text('MORE'),
-      //               )
-      //             ],
-      //           ),
-      //           Spacer(),
-      //           Row(
-      //             children: [
-      //               Text(
-      //                 'Most Wacthed',
-      //                 style: TextStyle(fontWeight: FontWeight.bold),
-      //               ),
-      //               RecievingAnimeCover(),
-      //               Spacer(),
-      //               GestureDetector(
-      //                 onTap: () {
-      //                   Navigator.pushReplacement(
-      //                       context,
-      //                       MaterialPageRoute(
-      //                           builder: (context) => animeLibraryPage()));
-      //                 },
-      //                 child: Text('MORE'),
-      //               )
-      //             ],
-      //           ),
-      //           Spacer(),
-      //           Row(
-      //             children: [
-      //               Text(
-      //                 'Continue Adding',
-      //                 style: TextStyle(fontWeight: FontWeight.bold),
-      //               ),
-      //               Spacer(),
-      //               GestureDetector(
-      //                 onTap: () {
-      //                   Navigator.pushReplacement(
-      //                       context,
-      //                       MaterialPageRoute(
-      //                           builder: (context) => animeLibraryPage()));
-      //                 },
-      //                 child: Text('MORE'),
-      //               )
-      //             ],
-      //           ),
-      //           Spacer(),
-      //         ],
-      //       ),
-      //     )
-      //   ],
-      // ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/background.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                Spacer(),
+                Row(
+                  children: [
+                    Text(
+                      'Top Anime',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => animeLibraryPage()));
+                      },
+                      child: Text('MORE'),
+                    )
+                  ],
+                ),
+                RecievingAnimeCover(),
+                Row(
+                  children: [
+                    Text(
+                      'Most Wacthed',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => animeLibraryPage()));
+                      },
+                      child: Text('MORE'),
+                    )
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  children: [
+                    Text(
+                      'Continue Adding',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => animeLibraryPage()));
+                      },
+                      child: Text('MORE'),
+                    )
+                  ],
+                ),
+                Spacer(),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -130,16 +128,11 @@ class animeCards extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text(
-                animeCoverinfo!.title,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                softWrap: false,
-              )
+              Text(animeCoverinfo!.title,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ))
             ],
           ),
         )
@@ -166,10 +159,7 @@ class RecievingAnimeCover extends StatelessWidget {
           List<AnimeCoverTile> animeList = snapshot.data!;
           List<Widget> AnimeCards =
               animeList.map((e) => animeCards(animeCoverinfo: e)).toList();
-          return ListView(
-            scrollDirection: Axis.horizontal,
-            children: AnimeCards,
-          );
+          return CarouselSlider(items: AnimeCards, options: CarouselOptions(aspectRatio: 18/9, viewportFraction: 0.4));
         } else {
           return Text('No data');
         }
