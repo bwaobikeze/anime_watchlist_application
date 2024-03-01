@@ -69,6 +69,7 @@ flutter:
   assets:
     - assets/background.jpg
     - assets/goku-icon-head.png
+    - assets/That-Time-I-Got-Reincarnated-As-A-Slime-Watch-Order.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
