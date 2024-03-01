@@ -17,7 +17,6 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         leading: Image.asset('assets/goku-icon-head.png'),
         backgroundColor: Colors.transparent,
-        title: Center(child: Text('Home')),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
@@ -30,81 +29,88 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Stack(
-        children: <Widget>[
+      body: Column(
+        children: [
           Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+              child: Image.asset(
+            'assets/That-Time-I-Got-Reincarnated-As-A-Slime-Watch-Order.jpg',
+            fit: BoxFit.cover,
+            height: 300.0,
+            width: 600,
+          )),
+          Spacer(),
+          Column(children: [
+            
+          ],),
           Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
+            padding: EdgeInsets.only(right: 10, left: 10),
+            child: Row(
               children: [
-                Spacer(),
-                Row(
-                  children: [
-                    Text(
-                      'Top Anime',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => animeLibraryPage()));
-                      },
-                      child: Text('MORE'),
-                    )
-                  ],
-                ),
-                RecievingAnimeCover(),
-                Row(
-                  children: [
-                    Text(
-                      'Most Wacthed',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => animeLibraryPage()));
-                      },
-                      child: Text('MORE'),
-                    )
-                  ],
+                Text(
+                  'Top Anime',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
-                Row(
-                  children: [
-                    Text(
-                      'Continue Adding',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => animeLibraryPage()));
-                      },
-                      child: Text('MORE'),
-                    )
-                  ],
-                ),
-                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => animeLibraryPage()));
+                  },
+                  child: Text('MORE'),
+                )
               ],
             ),
-          )
+          ),
+          RecievingAnimeCover(),
+          Padding(
+            padding: EdgeInsets.only(right: 10, left: 10),
+            child: Row(
+              children: [
+                Text(
+                  'Most Watched',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => animeLibraryPage()));
+                  },
+                  child: Text('MORE'),
+                )
+              ],
+            ),
+          ),
+           Spacer(),
+          Padding(
+            padding: EdgeInsets.only(right: 10, left: 10),
+            child: Row(
+              children: [
+                Text(
+                  'Continue Adding',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => animeLibraryPage()));
+                  },
+                  child: Text('MORE'),
+                )
+              ],
+            ),
+          ),
+          Spacer(),
+          Spacer(),
+          Spacer(),
+          Spacer(),
         ],
       ),
     );
@@ -159,7 +165,10 @@ class RecievingAnimeCover extends StatelessWidget {
           List<AnimeCoverTile> animeList = snapshot.data!;
           List<Widget> AnimeCards =
               animeList.map((e) => animeCards(animeCoverinfo: e)).toList();
-          return CarouselSlider(items: AnimeCards, options: CarouselOptions(aspectRatio: 18/9, viewportFraction: 0.4));
+          return CarouselSlider(
+              items: AnimeCards,
+              options:
+                  CarouselOptions( viewportFraction: 0.4));
         } else {
           return Text('No data');
         }
