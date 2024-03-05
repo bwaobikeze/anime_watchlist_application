@@ -19,7 +19,7 @@ class AniListAPI {
       document: gql(
         r'''
         query {
-          Page(page: 1, perPage: 7) {
+          Page(page: 1, perPage: 10) {
             media(type: ANIME) {
               id
               title {
