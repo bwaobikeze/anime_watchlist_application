@@ -1,5 +1,5 @@
 class AnimeCoverTile {
-  String title;
+  String? title;
   String japtitle;
   String cover;
   int id;

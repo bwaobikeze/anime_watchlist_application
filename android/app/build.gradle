@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.anime_watchlist_app"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -49,6 +49,9 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+//         manifestPlaceholders = [
+//          'appAuthRedirectScheme': 'com.example.anime_watchlist_app' // Add this also using your application ID URI as the based for all your derived URi
+//  ]
     }
 
     buildTypes {
