@@ -3,7 +3,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../repositories/firebase_auth.dart';
+import '../firbase/firebase_auth.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

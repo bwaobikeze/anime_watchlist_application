@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../repositories/validation.dart';
+import '../Widgets/validation.dart';
 import 'register_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../Widgets/Navigation_bar_Widget.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../repositories/anilist_Oauth.dart';
+import '../Anilist_GraphQL/anilist_Oauth.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {

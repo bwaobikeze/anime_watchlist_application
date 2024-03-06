@@ -43,7 +43,7 @@ class AnlistAuth {
 
       // Save the client for future requests
       _client = client;
-      print(_client.toString());
+      print(_client!.credentials.accessToken);
       return true;
     } else {
       return false;
@@ -57,7 +57,7 @@ class AnlistAuth {
     return uriLinkStream.first;
   }
 
-  static Future<String?> getAccessToken() async {
+  static Future<String> getAccessToken() async {
     if (_client == null) {
       throw Exception('Client not initialized. Call authorize() first.');
     }

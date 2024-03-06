@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import '../repositories/firebase_auth.dart';
+import '../firbase/firebase_auth.dart';
 import 'login_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../repositories/aniList_API_data.dart';
 import '../models/anime_cover_tile.dart';
 import '../view/anime_library_page.dart';
-import '../repositories/anilist_Oauth.dart';
 import '../main.dart';
+import '../Anilist_GraphQL/anilist_Query_Strings.dart';
 
 // class animeCards extends StatelessWidget {
 //   AnimeCoverTile animeCoverinfo;
@@ -75,26 +74,93 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                AnlistAuth.logout();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                       AnimeWatchlistApp(), // Replace HomeScreen() with your actual home screen widget
-                  ),
-                );
-              },
-              icon: Icon(Icons.logout_outlined))
-        ],
       ),
-      body: Center(
-        child: Query(options: QueryOptions(document: gql()), builder: (QueryResult result, {Refetch? refetch, FetchMore? fetchMore}) {
-          
-        })
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Auto-scrolling carousel of anime covers
+            // Replace this with your carousel implementation
+            Container(
+              height: 200, // Adjust the height as needed
+              child:
+                  Placeholder(), // Replace Placeholder with your carousel widget
+            ),
+            // Top anime row
+            AnimeRow(title: 'Top Anime', query: getTopAnimeQuery),
+            // Latest anime row
+            AnimeRow(title: 'Latest Anime', query: getLatestAnimeQuery),
+            // Currently watching anime row
+            AnimeRow(
+                title: 'Currently Watching', query: getCurrentlyWatchingQuery),
+          ],
+        ),
       ),
+    );
+  }
+}
+class AnimeRow extends StatelessWidget {
+  final String title;
+  final String query;
+
+  AnimeRow({required this.title, required this.query});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        
+        Query(
+          options: QueryOptions(document: gql(query),
+          ),
+          builder: (QueryResult result,
+              {Refetch? refetch, FetchMore? fetchMore}) {
+            if (result.hasException) {
+              print(result.exception.toString());
+              return Text('Error: ${result.exception.toString()}');
+            }
+
+            if (result.isLoading) {
+              return CircularProgressIndicator();
+            }
+
+            final List<dynamic> animes = result.data?['Page']['media'] ?? [];
+
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: animes
+                    .map((anime) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Image.network(
+                                anime['coverImage']['large'],
+                                width: 100, // Adjust the width as needed
+                                height: 150, // Adjust the height as needed
+                                fit: BoxFit.cover,
+                              ),
+                              Text(
+                                anime['title']['english'] ?? anime['title']['romaji'],
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }
