@@ -74,6 +74,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        actions: [Getuser()],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -99,6 +100,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
 class AnimeRow extends StatelessWidget {
   final String title;
   final String query;
@@ -117,9 +119,9 @@ class AnimeRow extends StatelessWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        
         Query(
-          options: QueryOptions(document: gql(query),
+          options: QueryOptions(
+            document: gql(query),
           ),
           builder: (QueryResult result,
               {Refetch? refetch, FetchMore? fetchMore}) {
@@ -149,8 +151,11 @@ class AnimeRow extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                               Text(
-                                anime['title']['english'] ?? anime['title']['romaji'],
+                                anime['title']['english'] ??
+                                    anime['title']['romaji'],
                                 textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
                               ),
                             ],
                           ),
@@ -161,6 +166,33 @@ class AnimeRow extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+class Getuser extends StatelessWidget {
+  const Getuser({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Query(
+      options: QueryOptions(document: gql(getCurrentUserQuery)),
+      builder: (result, {fetchMore, refetch}) {
+        if (result.hasException) {
+          print(result.exception.toString());
+          return Text('Error: ${result.exception.toString()}');
+        }
+
+        if (result.isLoading) {
+          return CircularProgressIndicator();
+        }
+
+        final Map<String, dynamic> user = result.data?['Viewer'] ?? {};
+
+        return CircleAvatar(
+          backgroundImage: NetworkImage(user['avatar']['large']),
+        );
+      },
     );
   }
 }
