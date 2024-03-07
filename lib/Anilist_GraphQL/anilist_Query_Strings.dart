@@ -35,7 +35,7 @@ const String getLatestAnimeQuery = '''
 const String getCurrentlyWatchingQuery = '''
   query {
     Page {
-      mediaList(userId: 1, status: CURRENT, type: ANIME) {
+      mediaList(userId: 6630889, status: CURRENT, type: ANIME) {
         id
         media {
           id
@@ -52,6 +52,17 @@ const String getCurrentlyWatchingQuery = '''
   }
 ''';
 
+const String getCurrentUserQuery = '''
+  query {
+    Viewer {
+      id
+      name
+      avatar {
+        large
+      }
+    }
+  }
+''';
 
 //   //   final QueryResult result = await client.value.query(options);
 //   //   if (result.hasException) {
