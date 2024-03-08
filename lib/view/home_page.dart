@@ -134,7 +134,7 @@ class AnimeRow extends StatelessWidget {
               return CircularProgressIndicator();
             }
 
-            final List<dynamic> animes = result.data?['Page']['media'] ?? [];
+            final List<dynamic> animes = result.data?['Page']['media'] ?? (result.data?['Page']['mediaList'] as List<dynamic>?)?.map((item) => item['media']).toList() ?? []; // take a look and undesatnd
 
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
