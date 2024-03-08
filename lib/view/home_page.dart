@@ -134,32 +134,42 @@ class AnimeRow extends StatelessWidget {
               return CircularProgressIndicator();
             }
 
-            final List<dynamic> animes = result.data?['Page']['media'] ?? (result.data?['Page']['mediaList'] as List<dynamic>?)?.map((item) => item['media']).toList() ?? []; // take a look and undesatnd
+            final List<dynamic> animes = result.data?['Page']['media']  ?? (result.data?['Page']['mediaList'] as List<dynamic>?)?.map((item) => AnimeCoverTile.fromJson(item)).toList() ?? [];
+            List <AnimeCoverTile>animeCoverList = animes.map((e) => AnimeCoverTile.fromJson(e)).toList(); // take a look and undesatnd
 
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: animes
-                    .map((anime) => Padding(
+                children: animeCoverList
+                    .map((anime) =>GestureDetector( onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => AnimeLibraryPage(anime: anime),
+                      //   ),
+                      // );
+                      print(anime.id);
+                    
+                    },child:Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
                               Image.network(
-                                anime['coverImage']['large'],
+                                anime.cover,
                                 width: 100, // Adjust the width as needed
                                 height: 150, // Adjust the height as needed
                                 fit: BoxFit.cover,
                               ),
                               Text(
-                                anime['title']['english'] ??
-                                    anime['title']['romaji'],
+                                anime.title??
+                                anime.japtitle,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
                               ),
                             ],
                           ),
-                        ))
+                        )))
                     .toList(),
               ),
             );
