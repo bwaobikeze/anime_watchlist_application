@@ -36,7 +36,6 @@ const String getCurrentlyWatchingQuery = '''
   query {
     Page {
       mediaList(userId: 6630889, status: CURRENT, type: ANIME) {
-        id
         media {
           id
           title {
