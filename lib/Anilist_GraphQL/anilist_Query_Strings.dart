@@ -1,7 +1,7 @@
 const String getTopAnimeQuery = '''
   query {
     Page {
-      media(type: ANIME, sort: SCORE_DESC) {
+      media(type: ANIME, status: RELEASING , season: WINTER) {
         id
         title {
           english
@@ -10,6 +10,13 @@ const String getTopAnimeQuery = '''
         coverImage {
           large
         }
+        description
+         streamingEpisodes {
+        title
+        thumbnail
+        url
+        site
+      }
       }
     }
   }
@@ -27,6 +34,7 @@ const String getLatestAnimeQuery = '''
         coverImage {
           large
         }
+        description
       }
     }
   }
@@ -45,6 +53,7 @@ const String getCurrentlyWatchingQuery = '''
           coverImage {
             large
           }
+          description
         }
       }
     }
