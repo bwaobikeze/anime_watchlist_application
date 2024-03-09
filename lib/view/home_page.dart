@@ -3,70 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../firbase/firebase_auth.dart';
 import 'login_page.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import '../models/anime_cover_tile.dart';
-import '../view/anime_library_page.dart';
-import '../main.dart';
+import '../Repositories/Converting_Anime_Json.dart';
 import '../Anilist_GraphQL/anilist_Query_Strings.dart';
-
-// class animeCards extends StatelessWidget {
-//   AnimeCoverTile animeCoverinfo;
-//   animeCards({super.key, required this.animeCoverinfo});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         Image.network(
-//           animeCoverinfo!.cover,
-//           fit: BoxFit.cover,
-//           height: 150.0,
-//         ),
-//         Padding(
-//           padding: EdgeInsets.all(8.0),
-//           child: Column(
-//             children: [
-//               Text(animeCoverinfo.title ?? animeCoverinfo.japtitle,
-//                   style: TextStyle(
-//                     fontSize: 10,
-//                     fontWeight: FontWeight.bold,
-//                   ))
-//             ],
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
-
-// class RecievingAnimeCover extends StatelessWidget {
-//   const RecievingAnimeCover({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<List<AnimeCoverTile>>(
-//       future: AniListAPI().getAnimeList(),
-//       builder:
-//           (BuildContext context, AsyncSnapshot<List<AnimeCoverTile>> snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return CircularProgressIndicator();
-//         } else if (snapshot.hasError) {
-//           print(snapshot.error);
-//           return Text('Error: ${snapshot.error}');
-//         } else if (snapshot.hasData) {
-//           List<AnimeCoverTile> animeList = snapshot.data!;
-//           List<Widget> AnimeCards =
-//               animeList.map((e) => animeCards(animeCoverinfo: e)).toList();
-//           return CarouselSlider(
-//               items: AnimeCards,
-//               options: CarouselOptions(viewportFraction: 0.4));
-//         } else {
-//           return Text('No data');
-//         }
-//       },
-//     );
-//   }
-// }
+import '../models/anime_cover_tile.dart';
+import '../view/anime_info_page.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -88,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                   Placeholder(), // Replace Placeholder with your carousel widget
             ),
             // Top anime row
-            AnimeRow(title: 'Top Anime', query: getTopAnimeQuery),
+            AnimeRow(title: 'This Season', query: getTopAnimeQuery),
             // Latest anime row
             AnimeRow(title: 'Latest Anime', query: getLatestAnimeQuery),
             // Currently watching anime row
@@ -133,24 +73,24 @@ class AnimeRow extends StatelessWidget {
             if (result.isLoading) {
               return CircularProgressIndicator();
             }
-
-            final List<dynamic> animes = result.data?['Page']['media']  ?? (result.data?['Page']['mediaList'] as List<dynamic>?)?.map((item) => AnimeCoverTile.fromJson(item)).toList() ?? [];
-            List <AnimeCoverTile>animeCoverList = animes.map((e) => AnimeCoverTile.fromJson(e)).toList(); // take a look and undesatnd
+            List<AnimeCoverTile> animeCoverList =
+                convertToAnimeCoverTile(result);
 
             return SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: animeCoverList
-                    .map((anime) =>GestureDetector( onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => AnimeLibraryPage(anime: anime),
-                      //   ),
-                      // );
-                      print(anime.id);
-                    
-                    },child:Padding(
+                    .map((anime) => GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => animeInfoPage(anime: anime),
+                            ),
+                          );
+                          print(anime.id);
+                        },
+                        child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
@@ -160,13 +100,14 @@ class AnimeRow extends StatelessWidget {
                                 height: 150, // Adjust the height as needed
                                 fit: BoxFit.cover,
                               ),
-                              Text(
-                                anime.title??
-                                anime.japtitle,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: true,
-                              ),
+                              Container(
+                                width: 100,
+                                child: Text(
+                                  anime.title ?? anime.japtitle,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 2,
+                                ),
+                              )
                             ],
                           ),
                         )))
