@@ -2,6 +2,7 @@
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uni_links/uni_links.dart';
+import '../main.dart';
 
 class AnlistAuth {
   static const String clientId = '17299';
@@ -22,9 +23,12 @@ class AnlistAuth {
     if (_authorizationUrl == null) {
       _authorizationUrl =
           _grant.getAuthorizationUrl(Uri.parse(redirectUrl)).toString();
+      // _authorizationUrl = null;
       print('Authorization URL generated: $_authorizationUrl');
     } else {
-      print('Authorization URL already exists: $_authorizationUrl');
+      print('Authorization URL already exists');
+       await launchUrl(Uri.parse(_authorizationUrl!));
+      return false;
     }
 
     // Launch the authorization URL in a webview or external browser
@@ -72,7 +76,9 @@ class AnlistAuth {
   }
 
   static Future<void> logout() async {
-    _client?.close();
     _grant.close();
+    client.dispose();
+    _client = null;
+    _authorizationUrl = null;
   }
 }
