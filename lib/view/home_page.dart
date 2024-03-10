@@ -7,6 +7,7 @@ import '../Repositories/Converting_Anime_Json.dart';
 import '../Anilist_GraphQL/anilist_Query_Strings.dart';
 import '../models/anime_cover_tile.dart';
 import '../view/anime_info_page.dart';
+import '../Anilist_GraphQL/anilist_Oauth.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -14,7 +15,20 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
-        actions: [Getuser()],
+        actions: [
+          Getuser(),
+          IconButton(
+              onPressed: () async {
+                AnlistAuth.logout();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen() ,
+                  ),
+                );
+              },
+              icon: Icon(Icons.logout_outlined))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -88,7 +102,10 @@ class AnimeRow extends StatelessWidget {
                               builder: (context) => animeInfoPage(anime: anime),
                             ),
                           );
-                          print(anime.id);
+                          // print(anime.id);
+                          // print(anime.listOfEpisodes?[0].episodeUrl);
+                          // print(anime.listOfEpisodes?[0].titleOfEpisode);
+                          // print(anime.listOfEpisodes?[0].thumbnail);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

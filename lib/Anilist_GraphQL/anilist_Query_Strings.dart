@@ -11,6 +11,8 @@ const String getTopAnimeQuery = '''
           large
         }
         description
+        episodes
+        averageScore
          streamingEpisodes {
         title
         thumbnail
@@ -35,6 +37,14 @@ const String getLatestAnimeQuery = '''
           large
         }
         description
+        episodes
+        averageScore
+        streamingEpisodes {
+        title
+        thumbnail
+        url
+        site
+      }
       }
     }
   }
@@ -54,6 +64,14 @@ const String getCurrentlyWatchingQuery = '''
             large
           }
           description
+          episodes
+          averageScore
+       streamingEpisodes {
+        title
+        thumbnail
+        url
+        site
+      }
         }
       }
     }
@@ -71,16 +89,3 @@ const String getCurrentUserQuery = '''
     }
   }
 ''';
-
-//   //   final QueryResult result = await client.value.query(options);
-//   //   if (result.hasException) {
-//   //     throw Exception('Failed to load user: ${result.exception.toString()}');
-//   //   }
-//   //   print(result.data);
-//   //   final List<dynamic> media = result.data!['Page']['media'];
-//   //   if (media.isNotEmpty) {
-//   //     return media.map((e) => AnimeCoverTile.fromJson(e)).toList();
-//   //   } else {
-//   //     throw Exception('No anime data found');
-//   //   }
-//   // }
