@@ -18,12 +18,12 @@ class HomeScreen extends StatelessWidget {
         actions: [
           Getuser(),
           IconButton(
-              onPressed: () async {
+              onPressed: () {
                 AnlistAuth.logout();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginScreen() ,
+                    builder: (context) => LoginScreen(),
                   ),
                 );
               },

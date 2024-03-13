@@ -1,8 +1,15 @@
 //import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uni_links/uni_links.dart';
 import '../main.dart';
+
+// import 'package:oauth2_client/oauth2_client.dart';
+// import 'package:oauth2_client/oauth2_helper.dart';
+// import 'package:oauth2_client/oauth2_response.dart';
+
 
 class AnlistAuth {
   static const String clientId = '17299';
@@ -20,19 +27,35 @@ class AnlistAuth {
   static String? _authorizationUrl;
 
   static Future<bool> authorize() async {
-    if (_authorizationUrl == null) {
-      _authorizationUrl =
-          _grant.getAuthorizationUrl(Uri.parse(redirectUrl)).toString();
-      // _authorizationUrl = null;
-      print('Authorization URL generated: $_authorizationUrl');
-    } else {
-      print('Authorization URL already exists');
-       await launchUrl(Uri.parse(_authorizationUrl!));
-      return false;
+    // if (_client != null) {
+    //   // Client already authorized, no need to authorize again
+    //   return true;
+    // }
+
+    final credentialsFile = File('./credentials.json');
+    var exists = await credentialsFile.exists();
+
+    if (exists) {
+      try {
+        var credentials =
+            oauth2.Credentials.fromJson(await credentialsFile.readAsString());
+        _client = oauth2.Client(credentials,
+            identifier: clientId, secret: ClientSecret);
+        print('Loaded existing credentials from file.');
+        return true;
+      } catch (e) {
+        print(e.toString());
+        return false;
+      }
     }
 
+    // Need to authorize the client
+    var authorizationUrl =
+        _grant.getAuthorizationUrl(Uri.parse(redirectUrl)).toString();
+    print('Authorization URL generated: $authorizationUrl');
+
     // Launch the authorization URL in a webview or external browser
-    await launchUrl(Uri.parse(_authorizationUrl!));
+    await launchUrl(Uri.parse(authorizationUrl));
 
     // After the user authorizes the app, they will be redirected to the redirect URL with the authorization code
     // Parse the authorization code from the URL
@@ -48,6 +71,14 @@ class AnlistAuth {
       // Save the client for future requests
       _client = client;
       print(_client!.credentials.accessToken);
+
+      // Persist credentials
+      try {
+        await credentialsFile.writeAsString(_client!.credentials.toJson());
+      } catch (e) {
+        print(e);
+      }
+
       return true;
     } else {
       return false;
@@ -76,9 +107,41 @@ class AnlistAuth {
   }
 
   static Future<void> logout() async {
+    await launchUrl(Uri.parse("https://anilist.co/settings/apps"));
     _grant.close();
     client.dispose();
     _client = null;
-    _authorizationUrl = null;
+    //_authorizationUrl = null;
   }
 }
+
+
+// class MyOAuth2Helper {
+//   late OAuth2Client _client;
+
+//   MyOAuth2Helper() {
+//     final Map<String, dynamic> config = {
+//       'redirectUri': 'your_redirect_uri',
+//       'customUriScheme': 'your_custom_uri_scheme',
+//       'authorizationUrl': 'https://example.com/oauth/authorize',
+//     };
+//     _client = OAuth2Client(config);
+//   }
+
+//   Future<bool> login() async {
+//     OAuth2Response result = await _client;
+//     return result.status == 200;
+//   }
+
+//   Future<void> logout() async {
+//     await _client.revokeAccessToken(tknResp);
+//   }
+
+  // Future<String?> getToken() async {
+  //   final token = await _client.getToken();
+  //   return token?.accessToken;
+  // }
+
+  // Future<void> refreshToken() async {
+  //   await _client.refreshToken();
+  // }

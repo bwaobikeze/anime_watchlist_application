@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql/client.dart';
 import './Anilist_GraphQL/anilist_Oauth.dart';
 
-
 //Main function to run the app
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,19 +17,20 @@ Future<void> main() async {
   );
   runApp(const AnimeWatchlistApp());
 }
-   final HttpLink httpLink = HttpLink(
-    'https://graphql.anilist.co',
-  );
-  final AuthLink authLink = AuthLink(getToken: () async {
-    return 'Bearer ' + await AnlistAuth.getAccessToken();
-  });
-  final Link link = authLink.concat(httpLink);
+
+final HttpLink httpLink = HttpLink(
+  'https://graphql.anilist.co',
+);
+final AuthLink authLink = AuthLink(getToken: () async {
+  return 'Bearer ' + await AnlistAuth.getAccessToken();
+});
+final Link link = authLink.concat(httpLink);
 
 final ValueNotifier<GraphQLClient> client =
-      ValueNotifier<GraphQLClient>(GraphQLClient(
-    link: link,
-    cache: GraphQLCache(),
-  ));
+    ValueNotifier<GraphQLClient>(GraphQLClient(
+  link: link,
+  cache: GraphQLCache(),
+));
 
 //Main class for the app
 class AnimeWatchlistApp extends StatelessWidget {

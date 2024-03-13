@@ -17,15 +17,16 @@ class animeInfoPage extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            height: 200, // Adjust the height as needed
+           width: 200, // Adjust the height as needed
             child: Image.network(
-                anime.cover), // Replace Placeholder with your carousel widget
+                anime.cover,fit: BoxFit.cover,), // Replace Placeholder with your carousel widget
           ),
           Text(anime.title ?? anime.japtitle),
           Text(anime.description ?? ''),
+          //animeInfoTabBar(),
           Text("Number of episodes: ${anime.numOfEpisodes}"),
           Text("Score: ${anime.rating}"),
-          //Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
+         // Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
           episodeListView(
             listOfCurrentEpisodes: anime.listOfEpisodes ?? [],
           )
@@ -42,20 +43,38 @@ class episodeListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child:listOfCurrentEpisodes.isEmpty ? const Center(child: Text("Sorry, no Streaming Episodes Available"))
-         :ListView.builder(
-            itemCount: listOfCurrentEpisodes.length,
-            itemBuilder: (context, Index) {
-              return ListTile(
-                onTap: () {
-                  launchUrl(
-                      Uri.parse(listOfCurrentEpisodes[Index].episodeUrl!));
-                },
-                leading: Image.network(listOfCurrentEpisodes[Index].thumbnail ??
-                    "no Episode Data"),
-                title: Text(listOfCurrentEpisodes[Index].titleOfEpisode ??
-                    'no title information'),
-              );
-            }));
+        child: listOfCurrentEpisodes.isEmpty
+            ? const Center(
+                child: Text("Sorry, no Streaming Episodes Available"))
+            : ListView.builder(
+                itemCount: listOfCurrentEpisodes.length,
+                itemBuilder: (context, Index) {
+                  return ListTile(
+                    onTap: () {
+                      launchUrl(
+                          Uri.parse(listOfCurrentEpisodes[Index].episodeUrl!));
+                    },
+                    leading: Image.network(
+                        listOfCurrentEpisodes[Index].thumbnail ??
+                            "no Episode Data"),
+                    title: Text(listOfCurrentEpisodes[Index].titleOfEpisode ??
+                        'no title information'),
+                  );
+                }));
+  }
+}
+
+class animeInfoTabBar extends StatelessWidget {
+  animeInfoTabBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(length: 3, child: TabBar(tabs: [
+      Tab(text: "Overview",),
+      Tab(text: "Review",),
+      Tab(text: "List Of Epidsodes",),
+    ]),
+    
+    );
   }
 }
