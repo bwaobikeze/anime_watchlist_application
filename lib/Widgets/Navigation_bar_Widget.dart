@@ -15,7 +15,6 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    animeLibraryPage(),
     calenderPage(),
     BrowsePage(),
   ];

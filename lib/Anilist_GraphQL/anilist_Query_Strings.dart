@@ -1,3 +1,6 @@
+import '../models/Current_Anlist_user_model.dart';
+
+String useridq = '';
 const String getTopAnimeQuery = '''
   query {
     Page {
@@ -53,7 +56,7 @@ const String getLatestAnimeQuery = '''
 const String getCurrentlyWatchingQuery = '''
   query {
     Page {
-      mediaList(userId: 6630889, status: CURRENT, type: ANIME) {
+      mediaList(userId: 6657588 , status: CURRENT, type: ANIME) {
         media {
           id
           title {
@@ -89,3 +92,5 @@ const String getCurrentUserQuery = '''
     }
   }
 ''';
+// 6630889
+//6657588
