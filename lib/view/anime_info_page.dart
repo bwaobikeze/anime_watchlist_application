@@ -17,16 +17,21 @@ class animeInfoPage extends StatelessWidget {
       body: Column(
         children: [
           Container(
-           width: 200, // Adjust the height as needed
-            child: Image.network(
-                anime.cover,fit: BoxFit.cover,), // Replace Placeholder with your carousel widget
+            width: 200, // Adjust the height as needed
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                anime.cover,
+                fit: BoxFit.cover,
+              ),
+            ), // Replace Placeholder with your carousel widget
           ),
           Text(anime.title ?? anime.japtitle),
           Text(anime.description ?? ''),
           //animeInfoTabBar(),
           Text("Number of episodes: ${anime.numOfEpisodes}"),
           Text("Score: ${anime.rating}"),
-         // Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
+          // Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
           episodeListView(
             listOfCurrentEpisodes: anime.listOfEpisodes ?? [],
           )
@@ -69,12 +74,19 @@ class animeInfoTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(length: 3, child: TabBar(tabs: [
-      Tab(text: "Overview",),
-      Tab(text: "Review",),
-      Tab(text: "List Of Epidsodes",),
-    ]),
-    
+    return DefaultTabController(
+      length: 3,
+      child: TabBar(tabs: [
+        Tab(
+          text: "Overview",
+        ),
+        Tab(
+          text: "Review",
+        ),
+        Tab(
+          text: "List Of Epidsodes",
+        ),
+      ]),
     );
   }
 }

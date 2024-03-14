@@ -70,7 +70,7 @@ class AnlistAuth {
 
       // Save the client for future requests
       _client = client;
-      print(_client!.credentials.accessToken);
+      //print(_client!.credentials.accessToken);
 
       // Persist credentials
       try {
@@ -109,7 +109,7 @@ class AnlistAuth {
   static Future<void> logout() async {
     await launchUrl(Uri.parse("https://anilist.co/settings/apps"));
     _grant.close();
-    client.dispose();
+    //client.dispose();
     _client = null;
     //_authorizationUrl = null;
   }

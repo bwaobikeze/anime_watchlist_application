@@ -1,6 +1,5 @@
 import '../models/Current_Anlist_user_model.dart';
 
-String useridq = '';
 const String getTopAnimeQuery = '''
   query {
     Page {
@@ -53,10 +52,10 @@ const String getLatestAnimeQuery = '''
   }
 ''';
 
-const String getCurrentlyWatchingQuery = '''
-  query {
+String getCurrentlyWatchingQuery = '''
+  query getuserCurrentWatching(\$id: Int) {
     Page {
-      mediaList(userId: 6657588 , status: CURRENT, type: ANIME) {
+      mediaList(userId: \$id , status: CURRENT, type: ANIME) {
         media {
           id
           title {
@@ -92,5 +91,56 @@ const String getCurrentUserQuery = '''
     }
   }
 ''';
-// 6630889
-//6657588
+
+const String getSearchedAnime = '''
+  query(\$animeItem: String) {
+    Page {
+      media(type: ANIME, search:\$animeItem) {
+        id
+        title {
+          english
+          romaji
+        }
+        coverImage {
+          large
+        }
+        description
+        episodes
+        averageScore
+         streamingEpisodes {
+        title
+        thumbnail
+        url
+        site
+      }
+      }
+    }
+  }
+''';
+
+const getCurrentpopularAnime = '''
+query anime {
+  Page(page: 1, perPage: 10) {
+    media(type: ANIME, sort: POPULARITY_DESC) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+      }
+      description
+      episodes
+      averageScore
+      streamingEpisodes {
+        title
+        thumbnail
+        url
+        site
+      }
+    }
+  }  
+}
+
+''';
