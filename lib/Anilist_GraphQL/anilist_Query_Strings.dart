@@ -11,6 +11,7 @@ const String getTopAnimeQuery = '''
         }
         coverImage {
           large
+          extraLarge
         }
         description
         episodes
@@ -37,6 +38,7 @@ const String getLatestAnimeQuery = '''
         }
         coverImage {
           large
+          extraLarge
         }
         description
         episodes
@@ -64,6 +66,7 @@ String getCurrentlyWatchingQuery = '''
           }
           coverImage {
             large
+            extraLarge
           }
           description
           episodes
@@ -103,6 +106,7 @@ const String getSearchedAnime = '''
         }
         coverImage {
           large
+          extraLarge
         }
         description
         episodes
@@ -129,6 +133,7 @@ query anime {
       }
       coverImage {
         large
+        extraLarge
       }
       description
       episodes

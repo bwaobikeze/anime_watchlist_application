@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:sheet/sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,30 +13,49 @@ class animeInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
+      body: Stack(
         children: [
-          Container(
-            width: 200, // Adjust the height as needed
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                anime.cover,
-                fit: BoxFit.cover,
-              ),
-            ), // Replace Placeholder with your carousel widget
+          AspectRatio(
+            aspectRatio: 2 / 3,
+            child: Image.network(
+              anime.extraLargeCover ?? anime.cover,
+              fit: BoxFit.cover,
+            ),
           ),
-          Text(anime.title ?? anime.japtitle),
-          Text(anime.description ?? ''),
-          //animeInfoTabBar(),
-          Text("Number of episodes: ${anime.numOfEpisodes}"),
-          Text("Score: ${anime.rating}"),
-          // Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
-          episodeListView(
-            listOfCurrentEpisodes: anime.listOfEpisodes ?? [],
+          Sheet(
+            initialExtent: 200,
+            child: Container(color: Colors.blue[100]),
           )
         ],
       ),
+      // body: Column(
+      //   children: [
+      //     Flexible(
+      //       flex: 5,
+      //       child:
+      //     Container(// Adjust the height as needed
+      //       child: AspectRatio(
+      //         aspectRatio: 2 / 3,
+      //         child: Image.network(
+      //           anime.extraLargeCover ?? anime.cover,
+      //           fit: BoxFit.cover,
+      //         ),
+      //       ), // Replace Placeholder with your carousel widget
+      //     )),
+      //     Text(anime.title ?? anime.japtitle),
+      //     Text(anime.description ?? ''),
+      //     //animeInfoTabBar(),
+      //     Text("Number of episodes: ${anime.numOfEpisodes}"),
+      //     Text("Score: ${anime.rating}"),
+      //     // Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
+      //     episodeListView(
+      //       listOfCurrentEpisodes: anime.listOfEpisodes ?? [],
+      //     )
+      //   ],
+      // ),
     );
   }
 }

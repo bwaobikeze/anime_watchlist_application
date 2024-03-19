@@ -41,11 +41,11 @@ dependencies:
   flutter_bloc: ^8.1.4
   carousel_slider: ^4.2.1
   url_launcher: ^6.2.5
-  shared_preferences: ^2.2.2
   oauth2: ^2.0.2
-  uni_links: ^0.5.1
   oauth2_client: ^3.2.1
   hive_flutter: ^1.1.0
+  uni_links: ^0.5.1
+  sheet: ^0.0.4+1
 
 dev_dependencies:
   flutter_test:

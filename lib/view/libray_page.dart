@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-class calenderPage extends StatelessWidget {
+
+class LibararyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calender'),
+        title: Text('Library'),
       ),
       body: Center(
-        child: Text('Calender'),
+        child: Text('Welcome to your anime libray'),
       ),
     );
   }

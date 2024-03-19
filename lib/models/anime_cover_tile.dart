@@ -5,6 +5,7 @@ class AnimeCoverTile {
   String? title;
   String japtitle;
   String cover;
+  String? extraLargeCover;
   int id;
   int? rating;
   String? description;
@@ -14,6 +15,7 @@ class AnimeCoverTile {
       {required this.title,
       required this.japtitle,
       required this.cover,
+       required this.extraLargeCover,
       required this.id,
       required this.rating,
       required this.numOfEpisodes,
@@ -24,6 +26,7 @@ class AnimeCoverTile {
         title: json['title']['english'],
         japtitle: json['title']['romaji'],
         cover: json['coverImage']['large'],
+        extraLargeCover: json['coverImage']['extraLarge'],
         rating: json['averageScore'],
         numOfEpisodes: json['episodes'],
         id: json['id'],
