@@ -149,3 +149,30 @@ query anime {
 }
 
 ''';
+const getCurrentUserAnimeList = '''
+query anime {
+  Page(page: 1, perPage: 10) {
+    media(type: ANIME, sort: POPULARITY_DESC) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+      }
+      description
+      episodes
+      averageScore
+      streamingEpisodes {
+        title
+        thumbnail
+        url
+        site
+      }
+    }
+  }  
+}
+
+''';

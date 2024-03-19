@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:sheet/sheet.dart';
+//import 'package:sheet/sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/anime_cover_tile.dart';
 import '../models/Streaming_Episodes_model.dart';
+import '../Repositories/removing_html_From_String.dart';
 
 class animeInfoPage extends StatelessWidget {
   AnimeCoverTile anime;
@@ -13,6 +14,7 @@ class animeInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
@@ -25,37 +27,60 @@ class animeInfoPage extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Sheet(
-            initialExtent: 200,
-            child: Container(color: Colors.blue[100]),
-          )
+          DraggableScrollableSheet(
+              builder: (BuildContext context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.all(9),
+                              child: Image.network(
+                                anime.cover,
+                                width: 100, // Adjust the width as needed
+                                height: 150, // Adjust the height as needed
+                                fit: BoxFit.cover,
+                              )),
+                          Column(children: [
+                            Container(
+                              width: 200,
+                              child: Text(
+                                anime.title ?? anime.japtitle,
+                                style: TextStyle(fontSize: 20),
+                                overflow: TextOverflow.fade,
+                                maxLines: 2,
+                              ),
+                            ),
+                            Text(
+                              "${anime.numOfEpisodes ?? 0} Episodes",
+                              style: TextStyle(fontSize: 10),
+                              overflow: TextOverflow.fade,
+                              maxLines: 2,
+                            ),
+                          ])
+                        ],
+                      ),
+                      SizedBox(
+                        height: 500,
+                        child: animeInfoTabBar(
+                          animeOverview: anime.description,
+                          animeEpisodes: anime.listOfEpisodes ?? [],
+                        ),
+                      )
+                    ],
+                  )),
+            );
+          })
         ],
       ),
-      // body: Column(
-      //   children: [
-      //     Flexible(
-      //       flex: 5,
-      //       child:
-      //     Container(// Adjust the height as needed
-      //       child: AspectRatio(
-      //         aspectRatio: 2 / 3,
-      //         child: Image.network(
-      //           anime.extraLargeCover ?? anime.cover,
-      //           fit: BoxFit.cover,
-      //         ),
-      //       ), // Replace Placeholder with your carousel widget
-      //     )),
-      //     Text(anime.title ?? anime.japtitle),
-      //     Text(anime.description ?? ''),
-      //     //animeInfoTabBar(),
-      //     Text("Number of episodes: ${anime.numOfEpisodes}"),
-      //     Text("Score: ${anime.rating}"),
-      //     // Image.network(anime.listOfEpisodes?[0].thumbnail ?? ''),
-      //     episodeListView(
-      //       listOfCurrentEpisodes: anime.listOfEpisodes ?? [],
-      //     )
-      //   ],
-      // ),
     );
   }
 }
@@ -89,23 +114,39 @@ class episodeListView extends StatelessWidget {
 }
 
 class animeInfoTabBar extends StatelessWidget {
-  animeInfoTabBar({super.key});
+  List<streamingEpisodes>? animeEpisodes;
+  String? animeOverview;
+
+  animeInfoTabBar({super.key, this.animeEpisodes, this.animeOverview});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
-      child: TabBar(tabs: [
-        Tab(
-          text: "Overview",
-        ),
-        Tab(
-          text: "Review",
-        ),
-        Tab(
-          text: "List Of Epidsodes",
-        ),
-      ]),
+      length: 3, // Number of tabs
+      child: Column(
+        children: [
+          TabBar(
+            tabs: [
+              Tab(text: 'Overview'),
+              Tab(text: 'Review'),
+              Tab(text: 'List of Episodes'),
+            ],
+          ),
+          Expanded(
+            child: Container(
+              // Wrap the TabBarView in a Container if needed
+              child: TabBarView(
+                children: [
+                  Text(removeHtmlTags(
+                      animeOverview ?? 'No description for this anime')),
+                  Center(child: Text('Content of Tab 2')),
+                  episodeListView(listOfCurrentEpisodes: animeEpisodes ?? []),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

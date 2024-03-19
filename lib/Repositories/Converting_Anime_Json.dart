@@ -13,7 +13,6 @@ List<AnimeCoverTile> convertToAnimeCoverTile(QueryResult result) {
             .toList() ??
         [];
   }
-
   return animes.map((animeData) {
     var streamingEpisodesData =
         animeData['streamingEpisodes'] as List<dynamic>?;
@@ -36,4 +35,5 @@ List<AnimeCoverTile> convertToAnimeCoverTile(QueryResult result) {
       listOfEpisodes: streamingEpisodesList,
     );
   }).toList();
+  
 }
