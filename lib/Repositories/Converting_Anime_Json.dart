@@ -28,6 +28,7 @@ List<AnimeCoverTile> convertToAnimeCoverTile(QueryResult result) {
       title: animeData['title']['english'],
       japtitle: animeData['title']['romaji'],
       cover: animeData['coverImage']['large'],
+       extraLargeCover:  animeData['coverImage']['extraLarge'],
       rating: animeData['averageScore'],
       numOfEpisodes: animeData['episodes'],
       id: animeData['id'],

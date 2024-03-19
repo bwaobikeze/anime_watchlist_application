@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../view/home_page.dart';
-import '../view/calender_page.dart';
+import '../view/libray_page.dart';
 import '../view/anime_library_page.dart';
 import '../view/browse_page.dart';
 
@@ -15,7 +15,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    calenderPage(),
+    LibararyPage(),
     BrowsePage(),
   ];
 
@@ -37,7 +37,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
                 icon: Icon(Icons.home_outlined), label: 'Home'),
             NavigationDestination(
                 icon: Icon(Icons.calendar_view_month_outlined),
-                label: 'Calendar'),
+                label: 'Library'),
             NavigationDestination(
                 icon: Icon(Icons.search_outlined), label: 'Discover'),
           ]),
