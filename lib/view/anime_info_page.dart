@@ -65,6 +65,10 @@ class animeInfoPage extends StatelessWidget {
                               overflow: TextOverflow.fade,
                               maxLines: 2,
                             ),
+                            OutlinedButton(
+                                style: const ButtonStyle(),
+                                onPressed: () {},
+                                child: const Text("Add"))
                           ])
                         ],
                       ),
@@ -149,4 +153,8 @@ class animeInfoTabBar extends StatelessWidget {
       ),
     );
   }
+}
+
+void addAnimeToList() {
+  
 }
