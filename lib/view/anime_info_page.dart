@@ -2,10 +2,12 @@ import 'dart:async';
 //import 'package:sheet/sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/anime_cover_tile.dart';
 import '../models/Streaming_Episodes_model.dart';
 import '../Repositories/removing_html_From_String.dart';
+import '../Anilist_GraphQL/anilist_Mutation_Strings.dart';
 
 class animeInfoPage extends StatelessWidget {
   AnimeCoverTile anime;
@@ -65,10 +67,7 @@ class animeInfoPage extends StatelessWidget {
                               overflow: TextOverflow.fade,
                               maxLines: 2,
                             ),
-                            OutlinedButton(
-                                style: const ButtonStyle(),
-                                onPressed: () {},
-                                child: const Text("Add"))
+                            addingAnimeToList(animeID: anime.id),
                           ])
                         ],
                       ),
@@ -155,6 +154,24 @@ class animeInfoTabBar extends StatelessWidget {
   }
 }
 
-void addAnimeToList() {
-  
+//Mutation to add anime to the users List
+
+class addingAnimeToList extends StatelessWidget {
+  int animeID;
+  addingAnimeToList({super.key, required this.animeID});
+
+  @override
+  Widget build(BuildContext context) {
+    return Mutation(
+      options: MutationOptions(document: gql(AddAnime)),
+      builder: (runMutation, result) {
+        return OutlinedButton(
+            style: const ButtonStyle(),
+            onPressed: () {
+              runMutation({'animeId': animeID});
+            },
+            child: const Text("Add"));
+      },
+    );
+  }
 }
