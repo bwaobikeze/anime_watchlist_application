@@ -1,4 +1,4 @@
-import 'package:anime_watchlist_app/view/register_page.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

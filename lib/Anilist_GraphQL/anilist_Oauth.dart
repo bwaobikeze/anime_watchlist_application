@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uni_links/uni_links.dart';
-import '../main.dart';
 
 // import 'package:oauth2_client/oauth2_client.dart';
 // import 'package:oauth2_client/oauth2_helper.dart';
@@ -32,23 +31,6 @@ class AnlistAuth {
     //   return true;
     // }
 
-    final credentialsFile = File('./credentials.json');
-    var exists = await credentialsFile.exists();
-
-    if (exists) {
-      try {
-        var credentials =
-            oauth2.Credentials.fromJson(await credentialsFile.readAsString());
-        _client = oauth2.Client(credentials,
-            identifier: clientId, secret: ClientSecret);
-        print('Loaded existing credentials from file.');
-        return true;
-      } catch (e) {
-        print(e.toString());
-        return false;
-      }
-    }
-
     // Need to authorize the client
     var authorizationUrl =
         _grant.getAuthorizationUrl(Uri.parse(redirectUrl)).toString();
@@ -72,12 +54,7 @@ class AnlistAuth {
       _client = client;
       //print(_client!.credentials.accessToken);
 
-      // Persist credentials
-      try {
-        await credentialsFile.writeAsString(_client!.credentials.toJson());
-      } catch (e) {
-        print(e);
-      }
+
 
       return true;
     } else {
@@ -115,33 +92,3 @@ class AnlistAuth {
   }
 }
 
-
-// class MyOAuth2Helper {
-//   late OAuth2Client _client;
-
-//   MyOAuth2Helper() {
-//     final Map<String, dynamic> config = {
-//       'redirectUri': 'your_redirect_uri',
-//       'customUriScheme': 'your_custom_uri_scheme',
-//       'authorizationUrl': 'https://example.com/oauth/authorize',
-//     };
-//     _client = OAuth2Client(config);
-//   }
-
-//   Future<bool> login() async {
-//     OAuth2Response result = await _client;
-//     return result.status == 200;
-//   }
-
-//   Future<void> logout() async {
-//     await _client.revokeAccessToken(tknResp);
-//   }
-
-  // Future<String?> getToken() async {
-  //   final token = await _client.getToken();
-  //   return token?.accessToken;
-  // }
-
-  // Future<void> refreshToken() async {
-  //   await _client.refreshToken();
-  // }

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../Anilist_GraphQL/anilist_Query_Strings.dart';
 import '../Repositories/Converting_Anime_Json.dart';
-import '../models/hivestore_persist_data.dart';
 import '../models/anime_cover_tile.dart';
 import '../view/anime_info_page.dart';
+import '../Repositories/sharedPreferences.dart';
 
 class animeLibraryPage extends StatelessWidget {
-  final homeuserStore = UserHiveStore();
+   int CurrentuserID = AppSharedPreferences.instance.getInt('Userid') ?? 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class animeLibraryPage extends StatelessWidget {
       body: Query(
           options: QueryOptions(
               document: gql(getCurrentUserAnimeList),
-              variables: {'id': homeuserStore.loadUser().id}),
+              variables: {'id': CurrentuserID}),
           builder: (QueryResult result,
               {Refetch? refetch, FetchMore? fetchMore}) {
             if (result.hasException) {

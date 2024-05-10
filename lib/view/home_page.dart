@@ -1,35 +1,34 @@
-import 'package:anime_watchlist_app/models/Current_Anlist_user_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-////import '../firbase/firebase_auth.dart';
-import 'login_page.dart';
 import '../Repositories/Converting_Anime_Json.dart';
 import '../Anilist_GraphQL/anilist_Query_Strings.dart';
 import '../models/anime_cover_tile.dart';
 import '../view/anime_info_page.dart';
-import '../Anilist_GraphQL/anilist_Oauth.dart';
-import '../models/hivestore_persist_data.dart';
+import '../Repositories/sharedPreferences.dart';
 
 class HomeScreen extends StatelessWidget {
-  final homeuserStore = UserHiveStore();
+  String userAvatUrl =
+      AppSharedPreferences.instance.getString('AvatarUrl') ?? "";
+      int CurrentuserID = AppSharedPreferences.instance.getInt('Userid') ?? 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
         actions: [
-          Getuser(),
+          CircleAvatar(
+            backgroundImage: NetworkImage(userAvatUrl),
+          ),
           IconButton(
               onPressed: () {
-                AnlistAuth.logout();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                );
+                // AnlistAuth.logout();
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => LoginScreen(),
+                //   ),
+                // );
               },
               icon: Icon(Icons.logout_outlined))
         ],
@@ -54,7 +53,7 @@ class HomeScreen extends StatelessWidget {
             AnimeRow(
               title: 'Currently Watching',
               query: getCurrentlyWatchingQuery,
-              variable: homeuserStore.loadUser().id,
+              variable: CurrentuserID,
             ),
           ],
         ),
@@ -142,34 +141,6 @@ class AnimeRow extends StatelessWidget {
   }
 }
 
-class Getuser extends StatelessWidget {
-  final userStore = UserHiveStore();
-  Getuser({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Query(
-      options: QueryOptions(document: gql(getCurrentUserQuery)),
-      builder: (result, {fetchMore, refetch}) {
-        if (result.hasException) {
-          print(result.exception.toString());
-          return Text('Error: ${result.exception.toString()}');
-        }
-
-        if (result.isLoading) {
-          return CircularProgressIndicator();
-        }
-
-        final Map<String, dynamic> user = result.data?['Viewer'] ?? {};
-        currentUser authUser = currentUser.fromJson(user);
-        userStore.saveUser(authUser);
-        return CircleAvatar(
-          backgroundImage: NetworkImage(authUser.avatar),
-        );
-      },
-    );
-  }
-}
 
 class getPopularanime extends StatelessWidget {
   const getPopularanime({super.key});
